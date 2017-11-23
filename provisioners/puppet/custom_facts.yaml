@@ -1,0 +1,22 @@
+lsbdistcodename: xenial
+lsbdistdescription: Ubuntu 16.04.3 LTS
+lsbdistid: Ubuntu
+lsbdistrelease: "16.04"
+lsbmajdistrelease: "16.04"
+operatingsystem: Ubuntu
+operatingsystemmajrelease: "16.04"
+operatingsystemrelease: "16.04"
+os:
+  distro:
+    codename: xenial
+    description: Ubuntu 16.04.3 LTS
+    id: Ubuntu
+    release:
+      full: "16.04"
+      major: "16.04"
+  family: Debian
+  name: Ubuntu
+  release:
+    full: "16.04"
+    major: "16.04"
+osfamily: Debian

@@ -1,0 +1,6 @@
+---
+bs_primary_user_group: vagrant
+bs_primary_user_name: vagrant
+bs_nameservers:
+  - 8.8.8.8
+  - 8.8.4.4

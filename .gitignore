@@ -1,0 +1,6 @@
+.vagrant
+.host
+*~
+
+# Puppet modules
+provisioners/puppet/modules/
