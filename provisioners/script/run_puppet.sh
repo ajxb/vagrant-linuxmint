@@ -16,15 +16,6 @@ configure_puppet() {
     abort 'Failed to copy Puppet configuration'
   fi
 
-  subdircount=$(find "${MY_PATH}/../puppet/modules/" -maxdepth 1 -type d | wc -l)
-  if [[ $subdircount -gt 2 ]]; then
-    echo 'Copying modules to /opt/puppetlabs/puppet/modules'
-    cp -fr "${MY_PATH}/"../puppet/modules/* /opt/puppetlabs/puppet/modules
-    if [[ $? -ne 0 ]]; then
-      abort 'Failed to copy modules'
-    fi
-  fi
-
   if [[ -e /etc/puppetlabs/puppet/hiera.yaml ]]; then
     rm -f /etc/puppetlabs/puppet/hiera.yaml
   fi
