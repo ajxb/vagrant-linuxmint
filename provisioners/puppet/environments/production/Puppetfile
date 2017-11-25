@@ -1,6 +1,6 @@
 forge "https://forge.puppet.com"
 
-mod 'ajxb-linuxmint', git: 'git://github.com/ajxb/puppet-linuxmint.git', ref: '1.0.0'
+mod 'ajxb-linuxmint', git: 'git://github.com/ajxb/puppet-linuxmint.git', ref: '1.1.0'
 mod 'camptocamp-gnome', '0.2.0'
 mod 'ghoneycutt-ssh', '3.56.1'
 mod 'puppetlabs-git', '0.5.0'

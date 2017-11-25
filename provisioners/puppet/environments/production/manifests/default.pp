@@ -11,6 +11,14 @@ $bs_nameservers           = lookup('bs_nameservers')
 lookup('classes', Array[String], 'unique').include
 
 ###############################################################################
+# Linux Mint customizations
+###############################################################################
+class { 'linuxmint':
+  user  => $bs_primary_user_name,
+  group => $bs_primary_user_group,
+}
+
+###############################################################################
 # resolvconf
 ###############################################################################
 class { 'resolv_conf':
