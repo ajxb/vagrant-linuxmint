@@ -11,16 +11,30 @@
 ###############################################################################
 configure_puppet() {
   echo 'Copying Puppet configuration to /etc/puppetlabs/code/environments'
-  rsync -rltDogz --delete --chown=root:root "${MY_PATH}/../puppet/environments" /etc/puppetlabs/code
+  rsync -rltDogz --delete --chown=root:root "${MY_PATH}/../puppet/environments" "/etc/puppetlabs/code"
+  if [[ $? -ne 0 ]]; then
+   abort 'Failed to copy Puppet configuration'
+  fi
+
+  echo 'Copying Puppetfile to /opt/puppetlabs/puppet/'
+  cp -f "${MY_PATH}/../puppet/environments/production/Puppetfile" "/opt/puppetlabs/puppet/"
   if [[ $? -ne 0 ]]; then
     abort 'Failed to copy Puppet configuration'
   fi
 
-  if [[ -e /etc/puppetlabs/puppet/hiera.yaml ]]; then
-    rm -f /etc/puppetlabs/puppet/hiera.yaml
+  if [[ -d "${MY_PATH}/../puppet/modules" ]]; then
+    echo 'Copying modules to /opt/puppetlabs/puppet'
+    cp -fr "${MY_PATH}/../puppet/modules" "/opt/puppetlabs/puppet/"
+    if [[ $? -ne 0 ]]; then
+      abort 'Failed to copy modules'
+    fi
   fi
 
-  cp -f "${MY_PATH}/../puppet/custom_facts.yaml" /opt/puppetlabs/facter/facts.d
+  if [[ -e "/etc/puppetlabs/puppet/hiera.yaml" ]]; then
+    rm -f "/etc/puppetlabs/puppet/hiera.yaml"
+  fi
+
+  cp -f "${MY_PATH}/../puppet/custom_facts.yaml" "/opt/puppetlabs/facter/facts.d"
 }
 
 ###############################################################################
@@ -34,7 +48,7 @@ configure_puppet() {
 ###############################################################################
 install_modules() {
   echo 'Updating puppet modules'
-  pushd /etc/puppetlabs/code/environments/production > /dev/null 2>&1
+  pushd /opt/puppetlabs/puppet > /dev/null 2>&1
   librarian-puppet install
   if [[ $? -ne 0 ]]; then
     abort 'Failed to update puppet modules'
@@ -53,12 +67,11 @@ install_modules() {
 ###############################################################################
 run_puppet() {
   echo 'Executing puppet'
-  pushd  > /dev/null 2>&1
-  puppet apply /etc/puppetlabs/code/environments/production/manifests/default.pp
-  if [[ $? -ne 0 ]]; then
+  puppet apply --detailed-exitcodes /etc/puppetlabs/code/environments/production/manifests/default.pp
+  exitcode=$?
+  if [[ $exitcode -eq 4 || $exitcode -eq 6 ]]; then
     abort 'Failed to execute puppet'
   fi
-  popd > /dev/null 2>&1
 }
 
 ###############################################################################
