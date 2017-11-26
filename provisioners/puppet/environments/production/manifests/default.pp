@@ -6,9 +6,16 @@ $bs_primary_user_name     = lookup('bs_primary_user_name')
 $bs_nameservers           = lookup('bs_nameservers')
 
 ###############################################################################
-# Basic includes now coming from Hiera
+# Basic class includes coming from Hiera
 ###############################################################################
 lookup('classes', Array[String], 'unique').include
+
+###############################################################################
+# Basic package installations coming from Hiera
+###############################################################################
+package { lookup('packages', Array[String], 'unique'):
+  ensure => latest,
+}
 
 ###############################################################################
 # Linux Mint customizations

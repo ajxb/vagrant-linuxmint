@@ -2,3 +2,6 @@
 classes:
   - ntp
   - ssh
+
+packages:
+  - dconf-tools
