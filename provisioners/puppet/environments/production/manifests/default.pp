@@ -53,9 +53,7 @@ group { $bs_primary_user_group:
 
 $user_dirs = [
   "/home/${bs_primary_user_name}",
-  "/home/${bs_primary_user_name}/.linuxmint",
-  "/home/${bs_primary_user_name}/.linuxmint/mintwelcome",
- ]
+]
 
 file { $user_dirs:
   ensure => 'directory',
@@ -65,19 +63,6 @@ file { $user_dirs:
   require => [
     User[$bs_primary_user_name],
     Group[$bs_primary_user_group],
-  ],
-}
-
-file { "/home/${bs_primary_user_name}/.linuxmint/mintwelcome/norun.flag":
-  ensure  => present,
-  content => '',
-  owner   => $bs_primary_user_name,
-  group   => $bs_primary_user_group,
-  mode    => '0700',
-  require => [
-    User[$bs_primary_user_name],
-    Group[$bs_primary_user_group],
-    File["/home/${bs_primary_user_name}/.linuxmint/mintwelcome"],
   ],
 }
 
