@@ -13,8 +13,14 @@ lookup('classes', Array[String], 'unique').include
 ###############################################################################
 # Basic package installations coming from Hiera
 ###############################################################################
+include apt
+apt::ppa { lookup('ppas', Array[String], 'unique'):
+  notify => Class['apt::update'],
+}
+
 package { lookup('packages', Array[String], 'unique'):
-  ensure => latest,
+  ensure  => latest,
+  require => Class['apt::update'],
 }
 
 ###############################################################################
@@ -30,6 +36,14 @@ class { 'linuxmint':
 ###############################################################################
 class { 'faba_icon_theme':
   user  => $bs_primary_user_name,
+}
+
+###############################################################################
+# Numix GTK Theme
+###############################################################################
+class { 'numix_gtk_theme':
+  user  => $bs_primary_user_name,
+  group => $bs_primary_user_group,
 }
 
 ###############################################################################

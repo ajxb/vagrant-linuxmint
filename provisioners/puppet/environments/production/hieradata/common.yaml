@@ -3,5 +3,9 @@ classes:
   - ntp
   - ssh
 
+ppas:
+  - ppa:glasen/freetype2
+
 packages:
   - dconf-tools
+  - libfreetype6
