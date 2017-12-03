@@ -1,6 +1,11 @@
 ###############################################################################
 # Parameters
 ###############################################################################
+$bs_packer_version   = lookup('bs_packer_version')
+$bs_ruby_version     = lookup('bs_ruby_version')
+$bs_rubygems_version = lookup('bs_rubygems_version')
+$bs_vagrant_version  = lookup('bs_vagrant_version')
+
 $bs_primary_user_group    = lookup('bs_primary_user_group')
 $bs_primary_user_name     = lookup('bs_primary_user_name')
 $bs_nameservers           = lookup('bs_nameservers')
@@ -51,6 +56,62 @@ class { 'resolv_conf':
 }
 
 ###############################################################################
+# packer
+###############################################################################
+class { 'packer':
+  version => $bs_packer_version,
+}
+
+###############################################################################
+# vagrant
+###############################################################################
+class { 'vagrant':
+  version => $bs_vagrant_version,
+}
+
+###############################################################################
+# RVM, Ruby and Gems
+###############################################################################
+package { 'curl':
+  ensure => 'latest',
+}
+
+exec { 'import_gpg_key':
+  command => 'curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -',
+  path    => '/usr/bin:/bin',
+  require => Package['curl'],
+}
+
+class { 'rvm':
+  gnupg_key_id => false,
+  require      => Exec['import_gpg_key'],
+}
+
+rvm_system_ruby { "ruby-${bs_ruby_version}":
+  ensure      => 'present',
+  default_use => true,
+}
+
+exec { 'update_rubygems':
+  command => "/bin/bash --login -c \"gem update --system ${bs_rubygems_version}\"",
+  require => Rvm_system_ruby["ruby-${bs_ruby_version}"],
+}
+
+rvm_gem { 'bundler':
+  name         => 'bundler',
+  ruby_version => "ruby-${bs_ruby_version}",
+  ensure       => latest,
+  require      => Rvm_system_ruby["ruby-${bs_ruby_version}"],
+}
+
+rvm_gem { 'librarian-puppet':
+  name         => 'librarian-puppet',
+  ruby_version => "ruby-${bs_ruby_version}",
+  ensure       => latest,
+  require      => Rvm_system_ruby["ruby-${bs_ruby_version}"],
+}
+
+###############################################################################
 # Users
 ###############################################################################
 user { $bs_primary_user_name:
@@ -75,6 +136,11 @@ file { $user_dirs:
     User[$bs_primary_user_name],
     Group[$bs_primary_user_group],
   ],
+}
+
+rvm::system_user { $bs_primary_user_name:
+  create  => false,
+  require => User[$bs_primary_user_name],
 }
 
 ###############################################################################
