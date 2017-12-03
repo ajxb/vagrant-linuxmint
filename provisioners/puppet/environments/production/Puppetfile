@@ -1,5 +1,6 @@
 forge "https://forge.puppet.com"
 
+mod 'ajxb-atom', git: 'git://github.com/ajxb/puppet-atom.git', ref: '1.0.2'
 mod 'ajxb-faba_icon_theme', git: 'git://github.com/ajxb/puppet-faba_icon_theme.git', ref: '2.0.1'
 mod 'ajxb-gnome', git: 'git://github.com/ajxb/puppet-gnome.git', ref: 'master'
 mod 'ajxb-linuxmint', git: 'git://github.com/ajxb/puppet-linuxmint.git', ref: '1.3.1'

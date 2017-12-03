@@ -2,10 +2,8 @@
 classes:
   - ntp
   - ssh
+  - atom
 
-ppas:
-  - ppa:glasen/freetype2
 
 packages:
   - dconf-tools
-  - libfreetype6
