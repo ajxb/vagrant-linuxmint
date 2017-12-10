@@ -134,12 +134,16 @@ archive { 'virtualbox-extpack':
   checksum      => "${vbox_extpack_checksum}",
   extract       => true,
   extract_path  => "${vbox_extpack_folder}",
-  user          => 'root',
-  group         => 'root',
   cleanup       => 'false',
-  creates       => 'true',
+  creates       => "${packages_root}/${vbox_extpack_package}.tgz",
   subscribe     => Package['virtualbox'],
   require       => File["${vbox_extpack_folder}"],
+}
+
+exec { 'virtualbox-extpack permissions':
+  command   => "chown -R root:root ${vbox_extpack_folder}",
+  path      => $facts['path'],
+  subscribe => Archive['virtualbox-extpack'],
 }
 
 ###############################################################################
