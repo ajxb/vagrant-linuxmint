@@ -16,3 +16,4 @@ packages:
   - dconf-tools
   - keepassxc
   - libcurl3
+  - curl

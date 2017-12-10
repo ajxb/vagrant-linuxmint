@@ -6,9 +6,9 @@ $bs_ruby_version     = lookup('bs_ruby_version')
 $bs_rubygems_version = lookup('bs_rubygems_version')
 $bs_vagrant_version  = lookup('bs_vagrant_version')
 
-$bs_primary_user_group    = lookup('bs_primary_user_group')
-$bs_primary_user_name     = lookup('bs_primary_user_name')
-$bs_nameservers           = lookup('bs_nameservers')
+$bs_primary_user_group = lookup('bs_primary_user_group')
+$bs_primary_user_name  = lookup('bs_primary_user_name')
+$bs_nameservers        = lookup('bs_nameservers')
 
 ###############################################################################
 # Basic class includes coming from Hiera
@@ -73,22 +73,79 @@ class { 'vagrant':
 }
 
 ###############################################################################
+# dpkg packages
+# Create a folder to store dpkg files
+###############################################################################
+$packages_root = '/opt/packages'
+file { $packages_root:
+  ensure => 'directory',
+  group  => 'root',
+  mode   => '0755',
+  owner  => 'root',
+}
+
+###############################################################################
+# VirtualBox
+###############################################################################
+$vbox_release          = '5.1.30'
+$vbox_package          = 'virtualbox-5.1_5.1.30-118389~Ubuntu~xenial_amd64.deb'
+$vbox_extpack_package  = 'Oracle_VM_VirtualBox_Extension_Pack-5.1.30.vbox-extpack'
+$vbox_extpack_checksum = '2da095e32f85fe5a1fe943158e079bd5aecb2724691c4038bd619ddee967b288'
+$vbox_extpack_folder   = '/usr/lib/virtualbox/ExtensionPacks/Oracle_VM_VirtualBox_Extension_Pack'
+$vbox_url              = "http://download.virtualbox.org/virtualbox/${vbox_release}"
+
+file { 'virtualbox-installer':
+  path    => "${packages_root}/${vbox_package}",
+  ensure  => 'present',
+  group   => 'root',
+  mode    => '0644',
+  owner   => 'root',
+  source  => "${vbox_url}/${vbox_package}",
+  require => File["${packages_root}"],
+}
+
+package { 'virtualbox':
+  provider             => 'dpkg',
+  ensure               => 'installed',
+  reinstall_on_refresh => true,
+  source               => "${packages_root}/${vbox_package}",
+  subscribe            => File['virtualbox-installer'],
+  require              => Package['libcurl3'],
+}
+
+$vbox_extpack_folders = [
+  '/usr/lib/virtualbox',
+  '/usr/lib/virtualbox/ExtensionPacks',
+  '/usr/lib/virtualbox/ExtensionPacks/Oracle_VM_VirtualBox_Extension_Pack',
+]
+file { $vbox_extpack_folders:
+  ensure  => 'directory',
+  group   => 'root',
+  mode    => '0755',
+  owner   => 'root',
+  require => Package['virtualbox'],
+}
+
+archive { 'virtualbox-extpack':
+  ensure        => 'present',
+  path          => "${packages_root}/${vbox_extpack_package}.tgz",
+  source        => "${vbox_url}/${vbox_extpack_package}",
+  checksum_type => 'sha256',
+  checksum      => "${vbox_extpack_checksum}",
+  extract       => true,
+  extract_path  => "${vbox_extpack_folder}",
+  user          => 'root',
+  group         => 'root',
+  cleanup       => 'false',
+  creates       => 'true',
+  subscribe     => Package['virtualbox'],
+  require       => File["${vbox_extpack_folder}"],
+}
+
+###############################################################################
 # RVM, Ruby and Gems
 ###############################################################################
-package { 'curl':
-  ensure => 'latest',
-}
-
-exec { 'import_gpg_key':
-  command => 'curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -',
-  path    => '/usr/bin:/bin',
-  require => Package['curl'],
-}
-
-class { 'rvm':
-  gnupg_key_id => false,
-  require      => Exec['import_gpg_key'],
-}
+class { 'rvm': }
 
 rvm_system_ruby { "ruby-${bs_ruby_version}":
   ensure      => 'present',
@@ -117,14 +174,6 @@ rvm_gem { 'librarian-puppet':
 ###############################################################################
 # GitKraken
 ###############################################################################
-$packages_root = '/opt/packages'
-file { $packages_root:
-  ensure => 'directory',
-  group  => 'root',
-  mode   => '0755',
-  owner  => 'root',
-}
-
 file { 'gitkraken-installer':
   path    => "${packages_root}/gitkraken-amd64.deb",
   ensure  => 'present',
@@ -142,6 +191,7 @@ package { 'gitkraken':
   source               => "${packages_root}/gitkraken-amd64.deb",
   subscribe            => File['gitkraken-installer'],
 }
+
 ###############################################################################
 # Users
 ###############################################################################
