@@ -9,6 +9,9 @@ classes:
   - ssh
   - atom
 
+ppas:
+  - ppa:phoerious/keepassxc
 
 packages:
   - dconf-tools
+  - keepassxc
