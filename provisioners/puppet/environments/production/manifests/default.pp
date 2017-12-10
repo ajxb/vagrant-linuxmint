@@ -115,6 +115,34 @@ rvm_gem { 'librarian-puppet':
 }
 
 ###############################################################################
+# GitKraken
+###############################################################################
+$packages_root = '/opt/packages'
+file { $packages_root:
+  ensure => 'directory',
+  group  => 'root',
+  mode   => '0755',
+  owner  => 'root',
+}
+
+file { 'gitkraken-installer':
+  path    => "${packages_root}/gitkraken-amd64.deb",
+  ensure  => 'present',
+  group   => 'root',
+  mode    => '0644',
+  owner   => 'root',
+  source  => 'https://release.gitkraken.com/linux/gitkraken-amd64.deb',
+  require => File["${packages_root}"],
+}
+
+package { 'gitkraken':
+  provider             => 'dpkg',
+  ensure               => 'installed',
+  reinstall_on_refresh => true,
+  source               => "${packages_root}/gitkraken-amd64.deb",
+  subscribe            => File['gitkraken-installer'],
+}
+###############################################################################
 # Users
 ###############################################################################
 user { $bs_primary_user_name:
