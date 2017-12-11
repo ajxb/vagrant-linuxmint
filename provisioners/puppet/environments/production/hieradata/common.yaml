@@ -13,7 +13,8 @@ ppas:
   - ppa:phoerious/keepassxc
 
 packages:
+  - curl
   - dconf-tools
+  - jq
   - keepassxc
   - libcurl3
-  - curl
