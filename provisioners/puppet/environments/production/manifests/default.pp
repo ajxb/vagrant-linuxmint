@@ -72,6 +72,18 @@ class { 'vagrant':
   version => $bs_vagrant_version,
 }
 
+vagrant::plugin { 'vagrant-hostsupdater':
+  user => $bs_primary_user_name,
+}
+
+vagrant::plugin { 'vagrant-reload':
+  user => $bs_primary_user_name,
+}
+
+vagrant::plugin { 'vagrant-triggers':
+  user => $bs_primary_user_name,
+}
+
 ###############################################################################
 # dpkg packages
 # Create a folder to store dpkg files
