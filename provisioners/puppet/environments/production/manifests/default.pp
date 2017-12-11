@@ -84,6 +84,10 @@ vagrant::plugin { 'vagrant-triggers':
   user => $bs_primary_user_name,
 }
 
+vagrant::plugin { 'vagrant-vbguest':
+  user => $bs_primary_user_name,
+}
+
 ###############################################################################
 # dpkg packages
 # Create a folder to store dpkg files
