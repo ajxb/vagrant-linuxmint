@@ -8,4 +8,4 @@ bs_nameservers:
 
 packages:
   - dropbox
-  - dropbox-nemo
+  - nemo-dropbox
