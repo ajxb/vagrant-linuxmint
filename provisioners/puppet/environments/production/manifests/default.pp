@@ -37,9 +37,9 @@ class { 'linuxmint':
 }
 
 ###############################################################################
-# Faba Icon Theme
+# Paper Icon Theme
 ###############################################################################
-class { 'faba_icon_theme':
+class { 'paper_icon_theme':
   user  => $bs_primary_user_name,
 }
 
