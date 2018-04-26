@@ -8,7 +8,6 @@ $bs_vagrant_version  = lookup('bs_vagrant_version')
 
 $bs_primary_user_group = lookup('bs_primary_user_group')
 $bs_primary_user_name  = lookup('bs_primary_user_name')
-$bs_nameservers        = lookup('bs_nameservers')
 
 ###############################################################################
 # Basic class includes coming from Hiera
@@ -49,13 +48,6 @@ class { 'paper_icon_theme':
 class { 'numix_gtk_theme':
   user  => $bs_primary_user_name,
   group => $bs_primary_user_group,
-}
-
-###############################################################################
-# resolvconf
-###############################################################################
-class { 'resolv_conf':
-  nameservers => $bs_nameservers,
 }
 
 ###############################################################################
