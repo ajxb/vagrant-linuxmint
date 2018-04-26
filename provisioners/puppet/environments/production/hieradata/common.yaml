@@ -1,8 +1,8 @@
 ---
-bs_packer_version: 1.1.2
-bs_ruby_version: 2.4.2
-bs_rubygems_version: 2.7.3
-bs_vagrant_version: 2.0.1
+bs_packer_version: 1.2.3
+bs_ruby_version: 2.5.1
+bs_rubygems_version: 2.7.6
+bs_vagrant_version: 2.0.4
 
 classes:
   - ntp
