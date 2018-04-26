@@ -96,24 +96,6 @@ configure_locale() {
 }
 
 ###############################################################################
-# Remove upstart, it interferes with Puppet
-# Globals:
-#   $0
-# Arguments:
-#   None
-# Returns:
-#   None
-###############################################################################
-remove_upstart() {
-  echo 'Removing upstart'
-
-  apt-get -qq -y remove upstart
-  if [[ $? -ne 0 ]]; then
-    abort 'Failed to remove upstart'
-  fi
-}
-
-###############################################################################
 # Parse script input for validity and configure global variables for use
 # throughout the script
 # Globals:
@@ -173,7 +155,6 @@ main() {
   configure_keyboard
   configure_locale
   configure_gnome_terminal
-  #remove_upstart
 
   popd > /dev/null 2>&1
 }
