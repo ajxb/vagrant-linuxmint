@@ -95,10 +95,10 @@ file { $packages_root:
 ###############################################################################
 # VirtualBox
 ###############################################################################
-$vbox_release          = '5.2.10'
-$vbox_package          = 'virtualbox-5.2_5.2.10-122088~Ubuntu~xenial_amd64.deb'
-$vbox_extpack_package  = 'Oracle_VM_VirtualBox_Extension_Pack-5.2.10.vbox-extpack'
-$vbox_extpack_checksum = '8c31bc1d0337e6668e0d9140defc6deaf265087f855783dd09b873a064a70703'
+$vbox_release          = '5.2.12'
+$vbox_package          = 'virtualbox-5.2_5.2.12-122591~Ubuntu~xenial_amd64.deb'
+$vbox_extpack_package  = 'Oracle_VM_VirtualBox_Extension_Pack-5.2.12.vbox-extpack'
+$vbox_extpack_checksum = '4c36d129f17dcab2bb37292022f1b1adfefa5f32a3161b0d5d40784bc8acf4d0'
 $vbox_extpack_folder   = '/usr/lib/virtualbox/ExtensionPacks/Oracle_VM_VirtualBox_Extension_Pack'
 $vbox_url              = "http://download.virtualbox.org/virtualbox/${vbox_release}"
 
